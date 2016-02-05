@@ -1,0 +1,104 @@
+
+body {
+	background: url(http://162.243.35.252/mobilehc2/assets/img/backgrounds/1.jpg);
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #888;
+    line-height: 30px;
+    text-align: center;
+}
+
+strong { font-weight: 500; }
+
+
+
+
+h3 {
+	font-size: 22px;
+    font-weight: 300;
+    color: #555;
+    line-height: 30px;
+}
+
+img { max-width: 100%; }
+
+::-moz-selection { background: #de995e; color: #fff; text-shadow: none; }
+::selection { background: #de995e; color: #fff; text-shadow: none; }
+
+
+/***** Top content *****/
+
+.inner-bg {
+    padding: 100px 0 50px 0;
+}
+
+.content .text {
+	color: #fff;
+}
+
+.content .text h1 { color: #fff; }
+
+.content .description {
+	margin: 20px 0 10px 0;
+}
+
+.content .description p { opacity: 0.8; }
+
+.content .description a {
+	color: #fff;
+}
+.content .description a:hover, 
+.content .description a:focus { border-bottom: 1px dotted #fff; }
+
+.form-group {
+	width: 100%;
+}
+
+.form-container {
+	margin-top: 5px;
+}
+
+.form-box {
+
+
+	-moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
+	text-align: left;
+}
+
+.form-box form textarea {
+	height: 100px;
+}
+
+
+.form-box form .input-error {
+	border-color: #de995e;
+}
+
+
+
+/***** Media queries *****/
+
+@media (min-width: 992px) and (max-width: 1199px) {}
+
+@media (min-width: 768px) and (max-width: 991px) {}
+
+@media (max-width: 767px) {
+	
+	.inner-bg { padding: 60px 0 110px 0; }
+
+}
+
+@media (max-width: 415px) {
+	
+	h1, h2 { font-size: 32px; }
+
+}
+
+
+
+@font-face {
+	font-family: nova;
+	src: url(pnl.otf);
+}
+

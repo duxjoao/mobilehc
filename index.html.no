@@ -1,0 +1,729 @@
+<?php
+
+// Reset the forward cookie if reset flag is present.
+if (isset($_GET['district_reset'])) {
+    unset($_COOKIE['ie_district_url']);
+    setcookie('ie_district_url', null, -1, '/');
+// Forward user if district url cookie is set.
+} else if (isset($_COOKIE['ie_district_url'])) {
+    $district_url = $_COOKIE['ie_district_url'];
+    header('Location: http://'.$district_url);
+    exit;
+}
+
+?>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Illuminate Education Home Connection Portal</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="assets/css/form-elements.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+        <link href="https://code.jquery.com/ui/1.11.4/themes/flick/jquery-ui.css" rel="stylesheet">
+        <script src="./js/jquery.cookie.js"></script>
+
+        <!-- Favicon and touch icons -->
+        <link rel="shortcut icon" href="assets/ico/favicon.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+        <script>
+            $(function() {
+                $('#site-list-autocomplete').autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            dataType: "json",
+                            data: {
+                                term: request.term,
+                            },
+                            type: 'get',
+                            contentType: 'application/json; charset=utf-8',
+                            xhrFields: {
+                                withCredentials: true
+                            },
+                            crossDomain: true,
+                            cache: true,
+                            url: './site_list.json',
+                            success: function (data) {
+                                console.log(data);
+                                var array = $.map(data, function (item) {
+                                    return {
+                                        label: item.label,
+                                        value: item.value
+                                    }
+                                });
+
+                                // call the filter here
+                                response($.ui.autocomplete.filter(array, request.term));
+                            },
+                            error: function (data) {
+
+                            }
+                        });
+                    },
+                    select: function(event, ui) {
+                        $.cookie('ie_distruct_url', ui.item.value, { expires: 365, path: '/' });
+
+                        window.location = 'https://' + ui.item.value.replace('illuminateed', 'illuminatehc') + '#from_app=1';
+                    },
+                    minLength: 3
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+
+        <!-- Top content -->
+        <div class="content">
+        	
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2 text">
+                            <img src = "assets/img/logo.png">
+                    
+                            <div class="description">
+                            	<p>
+	                            	Login instructions if any can go here.
+                            	</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3 form-container">
+
+                            <div class="form-box">
+			                    <form role="form" action="" method="post" class="login-form">
+			                    	<div class="form-group">
+			                        	<input type="text" placeholder="Enter Your School District" class="form-district form-control" id="site-list-autocomplete">
+			                        </div>
+			                        
+			                    </form>
+		                    </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3">
+                        	<h3>More Instructions</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+ <!--
+      <br><br><br><br>
+      <h4 class="form-signin-heading" class="form-control" >Please Select School District<br>
+      <?php echo $_COOKIE['district_url']; ?>
+      </h4>
+
+
+
+   <form action="index.php" method="POST">
+   <select data-placeholder="Choose a District..." name="district_url" id="district_url" style="width:350px;">
+            <option value="demo4.illuminatehc.com">Demo Site</option>
+            <option value="abcusd.illuminatehc.com">ABC Unified School District</option>
+            <option value="alameda.illuminatehc.com">Academy of Alameda Middle School</option>
+            <option value="auhsd.illuminatehc.com">Acalanes Union High School District</option>
+            <option value="achievementfirst.illuminatehc.com">Achievement First</option>
+            <option value="adprima.illuminatehc.com">Ad Prima Charter School Network</option>
+            <option value="aevsd.illuminatehc.com">Ada Exempted Village School District</option>
+            <option value="agapeschools.illuminatehc.com">Agape Schools</option>
+            <option value="alamedaclc.illuminatehc.com">Alameda Community Learning Center</option>
+            <option value="albemarle.illuminatehc.com">Albemarle County Public Schools</option>
+            <option value="alexandervalleyusd.illuminatehc.com">Alexander Valley Union School District</option>
+            <option value="alhambra.illuminatehc.com">Alhambra Unified School District</option>
+            <option value="micase.illuminatehc.com">Allegan Public Schools</option>
+            <option value="amaesd.illuminatehc.com">Alpena - Montmorency-Alcona Educational Service District</option>
+            <option value="alphaps.illuminatehc.com">Alpha Public Schools</option>
+            <option value="alsd.illuminatehc.com">Alta Loma Elementary School District</option>
+            <option value="alvina.illuminatehc.com">Alvina Elementary Charter School District- CANCELED</option>
+            <option value="sdusd.illuminatehc.com">Americas Finest Charter School</option>
+            <option value="amethod.illuminatehc.com">Amethod Public Schools</option>
+            <option value="anaheim.illuminatehc.com">Anaheim Union High School District</option>
+            <option value="andersonvalley.illuminatehc.com">Anderson Valley Unified School District- Canceled</option>
+            <option value="antioch.illuminatehc.com">Antioch Unified School District</option>
+            <option value="applecharters.illuminatehc.com">Apple Academy Charter</option>
+            <option value="avusd.illuminatehc.com">Apple Valley Unified School District</option>
+            <option value="araratcharterschool.illuminatehc.com">Ararat Charter School</option>
+            <option value="ausd.illuminatehc.com">Arcadia Unified School District</option>
+            <option value="oapcs.illuminatehc.com">Arts and College Preparatory Academy</option>
+            <option value="ascendlearning.illuminatehc.com">Ascend Learning</option>
+            <option value="apsb.illuminatehc.com">Ascension Parish School Board</option>
+            <option value="aspire.illuminatehc.com">Aspire Public Schools</option>
+            <option value="atasusd.illuminatehc.com">Atascadero Unified School District</option>
+            <option value="www.aesd.edu">Atwater Elementary School District</option>
+            <option value="aveson.illuminatehc.com">Aveson Charter Schools</option>
+            <option value="axlacademy.illuminatehc.com">AXL Academy - Colorado League of Charter Schools</option>
+            <option value="bpusd.illuminatehc.com">Baldwin Park Unified School District</option>
+            <option value="banning.illuminatehc.com">Banning Unified School District</option>
+            <option value="busdk12.illuminatehc.com">Barstow Unified School District</option>
+            <option value="bassett.illuminatehc.com">Bassett Unified School District</option>
+            <option value="bayshore.illuminatehc.com">Bayshore Elementary School District</option>
+            <option value="beardsley.illuminatehc.com">Beardsley School District</option>
+            <option value="beaumont.illuminatehc.com">Beaumont Unified School District</option>
+            <option value="bwcf.illuminatehc.com">Beginning with Children</option>
+            <option value="beniciaunified.illuminatehc.com">Benicia Unfiied School District</option>
+            <option value="bhas.illuminatehc.com">Benton Harbor Schools</option>
+            <option value="berkeley.illuminatehc.com">Berkeley Unified School District</option>
+            <option value="berrienresa.illuminatehc.com">Berrien RESA</option>
+            <option value="bigcreek.illuminatehc.com">Big Creek Elementary School District</option>
+            <option value="biggs.illuminatehc.com">Biggs Unified School District</option>
+            <option value="bonita.illuminatehc.com">Bonita Unified School District</option>
+            <option value="bossier.illuminatehc.com">Bossier Parish Schools</option>
+            <option value="branchisd.illuminatehc.com">Branch ISD</option>
+            <option value="besd.illuminatehc.com">Brawley Elementary School District</option>
+            <option value="brawleyhigh.illuminatehc.com">Brawley Union High School District</option>
+            <option value="bousd.illuminatehc.com">Brea Olinda Unified School District</option>
+            <option value="brentwood.illuminatehc.com">Brentwood Union School District</option>
+            <option value="brightstarschools.illuminatehc.com">Bright Star Schools</option>
+            <option value="brighton.illuminatehc.com">Brighton Area Schools</option>
+            <option value="brisbane.illuminatehc.com">Brisbane School District</option>
+            <option value="bronxexcellence.illuminatehc.com">Bronx Charter School for Excellence</option>
+            <option value="brooklynlaboratoryschool.illuminatehc.com">Brooklyn Laboratory Charter School</option>
+            <option value="brooklynprospect.illuminatehc.com">Brooklyn Prospect Charter School</option>
+            <option value="bpsd.illuminatehc.com">Buena Park School District</option>
+            <option value="buffalo.illuminatehc.com">Buffalo Public Schools</option>
+            <option value="bulloch.illuminatehc.com">Bulloch County Schools</option>
+            <option value="burrel.illuminatehc.com">Burrel Union Elementary School District</option>
+            <option value="burtonschools.illuminatehc.com">Burton School District</option>
+            <option value="bwusd.illuminatehc.com">Buttonwillow Union School District</option>
+            <option value="byron.illuminatehc.com">Byron Union School District</option>
+            <option value="caddoschools.illuminatehc.com">Caddo Parish</option>
+            <option value="cisd.illuminatehc.com">Calhoun Intermediate School District</option>
+            <option value="caliber.illuminatehc.com">Caliber Schools</option>
+            <option value="cambriansd.illuminatehc.com">Cambrian School District</option>
+            <option value="caminonuevo.illuminatehc.com">Camino Nuevo Charter Academy</option>
+            <option value="campbellusd.illuminatehc.com">Campbell Union School District</option>
+            <option value="capousd.illuminatehc.com">Capistrano Unified School District</option>
+            <option value="carlsbadusd.illuminatehc.com">Carlsbad Unified School District</option>
+            <option value="caruthers.illuminatehc.com">Caruthers Unified School District</option>
+            <option value="cctschools.illuminatehc.com">Castlemont Community Transformation Schools</option>
+            <option value="centennialsd.illuminatehc.com">Centennial School District</option>
+            <option value="centerusd.illuminatehc.com">Center Joint Unified School District</option>
+            <option value="centinela.illuminatehc.com">Centinela Valley Union High School District</option>
+            <option value="csd.illuminatehc.com">Central Elementary School District</option>
+            <option value="centralunified.illuminatehc.com">Central Unified School District</option>
+            <option value="central.illuminatehc.com">Central Union School District</option>
+            <option value="cesd.illuminatehc.com">Centralia Elementary School District</option>
+            <option value="ccadenver.illuminatehc.com">Cesar Chavez Academy-Denver</option>
+            <option value="chavezschools.illuminatehc.com">Cesar Chavez Public Charter Schools for Public Policy</option>
+            <option value="chaffey.illuminatehc.com">Chaffey Joint Union High School District</option>
+            <option value="charlotte.illuminatehc.com">Charlotte Public Schools</option>
+            <option value="copesd.illuminatehc.com">Cheboygan-Otsego-Presque Isle ESD</option>
+            <option value="chesteruplandsd.illuminatehc.com">Chester Upland School District</option>
+            <option value="chewelahk12.illuminatehc.com">Chewelah School District</option>
+            <option value="chicousd.illuminatehc.com">Chico Unified School District</option>
+            <option value="copschools.illuminatehc.com">Children of Promise</option>
+            <option value="chinovalley.illuminatehc.com">Chino Valley Unified School District</option>
+            <option value="oapcs.illuminatehc.com">City Day Community School</option>
+            <option value="citycharterschool.illuminatehc.com">City School</option>
+            <option value="claremont.illuminatehc.com">Claremont Unified School District</option>
+            <option value="claytonvalley.illuminatehc.com">Clayton Valley Charter High School</option>
+            <option value="chuh.illuminatehc.com">Cleveland Heights-University Heights City School District</option>
+            <option value="ccresa.illuminatehc.com">Clinton County RESA</option>
+            <option value="cloverdale.illuminatehc.com">Cloverdale Unified School District</option>
+            <option value="cusd.illuminatehc.com">Clovis Unified School District</option>
+            <option value="coastusd.illuminatehc.com">Coast Unified School District</option>
+            <option value="collegiatecharter.illuminatehc.com">Collegiate Charter High School of Los Angeles</option>
+            <option value="ccsd180.illuminatehc.com">Community Consolidated School District 180</option>
+            <option value="compassacademy.illuminatehc.com">Compass Academy</option>
+            <option value="coneyislandprep.illuminatehc.com">Coney Island Prep</option>
+            <option value="coorisd.illuminatehc.com">COOR Intermediate School District</option>
+            <option value="cnusd.illuminatehc.com">Corona-Norco Unified School District DnA</option>
+            <option value="cvusd.illuminatehc.com">Covina Valley Unified School District</option>
+            <option value="crescentacademy.illuminatehc.com">Crescent Academy</option>
+            <option value="cuca.illuminatehc.com">Cucamonga School District</option>
+            <option value="ccreek.illuminatehc.com">Curtis Creek School District</option>
+            <option value="cojusd.illuminatehc.com">Cutler-Orosi Joint Unified School District</option>
+            <option value="darnallcharter.illuminatehc.com">Darnall Charter School</option>
+            <option value="davinci.illuminatehc.com">DaVinci Academy of Innovation Academy</option>
+            <option value="djusd.illuminatehc.com">Davis Joint Unified School District</option>
+            <option value="dmusd.illuminatehc.com">Del Mar Union Elementary School District</option>
+            <option value="delnorte.illuminatehc.com">Del Norte County Office of Education</option>
+            <option value="djuhsd.illuminatehc.com">Delano Joint Union High School District</option>
+            <option value="delhicharterschool.illuminatehc.com">Delhi Charter School</option>
+            <option value="delhi.illuminatehc.com">Delhi Unified School District</option>
+            <option value="deltacs.illuminatehc.com">Delta Charter School</option>
+            <option value="dsisd.illuminatehc.com">Delta-Schoolcraft Intermediate School District</option>
+            <option value="dpsk12.illuminatehc.com">Denver Public Schools</option>
+            <option value="wisd.illuminatehc.com">Dexter Community Schools</option>
+            <option value="diisd.illuminatehc.com">Dickinson-Iron Intermediate School District</option>
+            <option value="doveacademy.illuminatehc.com">Dove Academy of Detroit- CANCELED</option>
+            <option value="downey.illuminatehc.com">Downey Unified School District</option>
+            <option value="durhamunified.illuminatehc.com">Durham Unified School District</option>
+            <option value="elhaynes.illuminatehc.com">E.L. HAYNES PUBLIC CHARTER SCHOOL</option>
+            <option value="e3civichigh.illuminatehc.com">E3 Civic High School</option>
+            <option value="earlimart.illuminatehc.com">Earlimart Elementary School District</option>
+            <option value="eastbayia.illuminatehc.com">East Bay Innovation Academy</option>
+            <option value="eastlongmeadowma.illuminatehc.com">East Longmeadow Public Schools</option>
+            <option value="eastnicolaus.illuminatehc.com">East Nicolaus</option>
+            <option value="ewcsd.illuminatehc.com">East Whittier City School District</option>
+            <option value="eup.illuminatehc.com">Eastern Upper Peninsula Intermediate School District</option>
+            <option value="eaton.illuminatehc.com">Eaton Rapids Public Schools</option>
+            <option value="efcps.illuminatehc.com">Education For Change Charter Schools</option>
+            <option value="edcoe.illuminatehc.com">El Dorado County Office of Education</option>
+            <option value="emuhsd.illuminatehc.com">El Monte Union High School District</option>
+            <option value="elrancho.illuminatehc.com">El Rancho Charter School</option>
+            <option value="esusd.illuminatehc.com">El Segundo Unified School District</option>
+            <option value="eltejon.illuminatehc.com">El Tejon Unified School District</option>
+            <option value="emery.illuminatehc.com">Emery Unified School District</option>
+            <option value="eusd.illuminatehc.com">Encinitas Union School District</option>
+            <option value="oakland.illuminatehc.com">EnCompass Academy</option>
+            <option value="envision.illuminatehc.com">Envision Charter Schools</option>
+            <option value="equitasacademy.illuminatehc.com">Equitas Academy Charter School</option>
+            <option value="echs.illuminatehc.com">Escondido Charter High School</option>
+            <option value="euhsd.illuminatehc.com">Escondido Union High School District</option>
+            <option value="escondido.illuminatehc.com">Escondido Union School District</option>
+            <option value="esparto.illuminatehc.com">Esparto Unified School District</option>
+            <option value="esd.illuminatehc.com">Etiwanda School District</option>
+            <option value="exaltacademiesar.illuminatehc.com">Exalt Arkanas</option>
+            <option value="exaltacademiesor.illuminatehc.com">Exalt Oregon</option>
+            <option value="excelacademy.illuminatehc.com">Excel Academy Charter Schools</option>
+            <option value="excelwa.illuminatehc.com">Excel Public Charter School</option>
+            <option value="exploreschools.illuminatehc.com">Explore Schools</option>
+            <option value="exteraschools.illuminatehc.com">Extera Public Schools</option>
+            <option value="farmersville.illuminatehc.com">Farmersville Unified School District</option>
+            <option value="fenton.illuminatehc.com">Fenton Charter Schools</option>
+            <option value="fillmore.illuminatehc.com">Fillmore Unified School District</option>
+            <option value="fldusd.illuminatehc.com">Firebaugh Las Deltas Unified School District</option>
+            <option value="fcusd.illuminatehc.com">Folsom-Cordova Unified School District</option>
+            <option value="forestparkschools.illuminatehc.com">Forest Park 91</option>
+            <option value="fortbragg.illuminatehc.com">Fort Bragg Unified School District</option>
+            <option value="fortuneschool.illuminatehc.com">Fortune School of Education</option>
+            <option value="fvsd.illuminatehc.com">Fountain Valley School District</option>
+            <option value="fowler.illuminatehc.com">Fowler Unified School District</option>
+            <option value="franklin.illuminatehc.com">Franklin Elementary School District</option>
+            <option value="fmsd.illuminatehc.com">Franklin-McKinley School District</option>
+            <option value="freedomprep.illuminatehc.com">Freedom Preparatory Academy</option>
+            <option value="fremont.illuminatehc.com">Fremont Unified School District</option>
+            <option value="fcoe.illuminatehc.com">Fresno County Court and Community Schools</option>
+            <option value="fresnounified.illuminatehc.com">Fresno Unified School District</option>
+            <option value="fsd.illuminatehc.com">Fullerton Elementary School District</option>
+            <option value="fjuhsd.illuminatehc.com">Fullerton Joint Union High School District</option>
+            <option value="gabriella.illuminatehc.com">Gabriella Charter School</option>
+            <option value="micase.illuminatehc.com">Galesburg-Augusta Community Schools</option>
+            <option value="galt.illuminatehc.com">Galt Joint Union Elementary School District</option>
+            <option value="gardengrove.illuminatehc.com">Garden Grove Unified School District</option>
+            <option value="gateway.illuminatehc.com">Gateway Community Charters</option>
+            <option value="geneseeisd.illuminatehc.com">Genesee ISD</option>
+            <option value="galschoolsdenver.illuminatehc.com">Girls Athletic Leadership School</option>
+            <option value="gesd40.illuminatehc.com">Glendale Elementary School District</option>
+            <option value="gusd.illuminatehc.com">Glendale Unified School District</option>
+            <option value="glendora.illuminatehc.com">Glendora Unified School District</option>
+            <option value="geaschool.illuminatehc.com">Global Education Academy</option>
+            <option value="globe.illuminatehc.com">Globe Unified School District #1</option>
+            <option value="goisd.illuminatehc.com">Gogebic-Ontonagon Intermediate School District</option>
+            <option value="goldenvalleycharter.illuminatehc.com">Golden Valley Charter Schools</option>
+            <option value="gonzales.illuminatehc.com">Gonzales Unified School District</option>
+            <option value="gower62.illuminatehc.com">Gower School District 62</option>
+            <option value="gvsd.illuminatehc.com">Grass Valley Elementary School District</option>
+            <option value="giresd.illuminatehc.com">Gratiot-Isabella RESD</option>
+            <option value="gridley.illuminatehc.com">Gridley Unified School District</option>
+            <option value="grimmway.illuminatehc.com">Grimmway Academy</option>
+            <option value="guhsd.illuminatehc.com">Grossmont Union High School District</option>
+            <option value="gugcs.illuminatehc.com">Growing Up Green Charter School</option>
+            <option value="gustine.illuminatehc.com">Gustine Unified School District</option>
+            <option value="hesedu.illuminatehc.com">Hamadeh Educational Services, INC.</option>
+            <option value="unit10.illuminatehc.com">Hamilton County Unit 10 School District</option>
+            <option value="hjuhsd.illuminatehc.com">Hanford Joint Union High School District</option>
+            <option value="harmonydc.illuminatehc.com">Harmony DC Public Charter</option>
+            <option value="tubmancharter.illuminatehc.com">Harriet Tubman Village Charter School</option>
+            <option value="hartlandschools.illuminatehc.com">Hartland Consolidated Schools</option>
+            <option value="hcz.illuminatehc.com">HCZ - Promise Academy</option>
+            <option value="heard.illuminatehc.com">Heard County</option>
+            <option value="helendale.illuminatehc.com">Helendale School District</option>
+            <option value="hemet.illuminatehc.com">Hemet Unified School District</option>
+            <option value="hesperiausd.illuminatehc.com">Hesperia Unified School District</option>
+            <option value="highlineacademy.illuminatehc.com">Highline Academy</option>
+            <option value="hps.illuminatehc.com">Highline Public Schools</option>
+            <option value="holtville.illuminatehc.com">Holtville Unified School District</option>
+            <option value="hgcschool.illuminatehc.com">Howard Gardner Community School</option>
+            <option value="hbcsd.illuminatehc.com">Huntington Beach City School District</option>
+            <option value="hbuhsd.illuminatehc.com">Huntington Beach Union High School District</option>
+            <option value="hisd.illuminatehc.com">Huron Intermediate School District</option>
+            <option value="inghamisd.illuminatehc.com">Ingham ISD</option>
+            <option value="inglewood.illuminatehc.com">Inglewood Unified School District</option>
+            <option value="inlandleaders.illuminatehc.com">Inland Leaders Charter School</option>
+            <option value="icefps.illuminatehc.com">Inner City Education Foundation ICEF</option>
+            <option value="iicsn.illuminatehc.com">Innovations International Charter School of Nevada</option>
+            <option value="ivalongbeach.illuminatehc.com">Intellectual Virtues Academy of Long Beach</option>
+            <option value="intrepidcollegeprep.illuminatehc.com">Intrepid College Prep</option>
+            <option value="intrinsicschools.illuminatehc.com">Intrinsic Schools</option>
+            <option value="ioniaisd.illuminatehc.com">Ionia Intermediate School District</option>
+            <option value="jagschools.illuminatehc.com">James A Garfield Local Schools</option>
+            <option value="jdusd.illuminatehc.com">Jamul-Dulzura Union Elementary School District</option>
+            <option value="jcsd.illuminatehc.com">Jefferson County School District</option>
+            <option value="jefferson.illuminatehc.com">Jefferson School District</option>
+            <option value="fremonths.illuminatehc.com">John C Fremont High School</option>
+            <option value="kalamazoo.illuminatehc.com">Kalamazoo Public Schools</option>
+            <option value="keplerschool.illuminatehc.com">Kepler Neighborhood School</option>
+            <option value="kermanusd.illuminatehc.com">Kerman Unified School District</option>
+            <option value="khsd.illuminatehc.com">Kern High School District</option>
+            <option value="keyacademycharter.illuminatehc.com">Key Academy Charter School</option>
+            <option value="kingchavez.illuminatehc.com">King Chavez Neighborhood of Schools</option>
+            <option value="kcusd.illuminatehc.com">Kings Canyon Joint Unified School District</option>
+            <option value="kingscoe.illuminatehc.com">Kings County Office of Education</option>
+            <option value="kingsriverelementary.illuminatehc.com">Kings River Elementary School District</option>
+            <option value="kesd.illuminatehc.com">Kingsburg Elementary Charter School District</option>
+            <option value="kjuhsd.illuminatehc.com">Kingsburg Joint Union High School District</option>
+            <option value="kippadelante.illuminatehc.com">KIPP Adelante (San Diego)</option>
+            <option value="kippmetroatlanta.illuminatehc.com">KIPP Atlanta</option>
+            <option value="kippaustin.illuminatehc.com">KIPP Austin</option>
+            <option value="kippbaltimore.illuminatehc.com">KIPP Baltimore</option>
+            <option value="kippbayarea.illuminatehc.com">KIPP Bay Area</option>
+            <option value="kippcharlotte.illuminatehc.com">KIPP Charlotte</option>
+            <option value="kippchicago.illuminatehc.com">KIPP Chicago</option>
+            <option value="kippcolorado.illuminatehc.com">KIPP Colorado</option>
+            <option value="kippcolumbus.illuminatehc.com">KIPP Columbus (Central Ohio)</option>
+            <option value="kippdc.illuminatehc.com">KIPP DC</option>
+            <option value="kippdelta.illuminatehc.com">KIPP Delta Public Schools</option>
+            <option value="kippdfw.illuminatehc.com">KIPP DFW (Dallas-Fort Worth)</option>
+            <option value="kippendeavor.illuminatehc.com">KIPP Endeavor (Kansas City)</option>
+            <option value="kipp.illuminatehc.com">KIPP Foundation National</option>
+            <option value="kipphouston.illuminatehc.com">KIPP Houston</option>
+            <option value="kipphouston.illuminatehc.com">KIPP Houston</option>
+            <option value="kippindy.illuminatehc.com">KIPP Indianapolis</option>
+            <option value="kippjax.illuminatehc.com">KIPP Jacksonville</option>
+            <option value="kippla.illuminatehc.com">KIPP LA</option>
+            <option value="kippma.illuminatehc.com">KIPP Massachusetts</option>
+            <option value="kippmemphis.illuminatehc.com">KIPP Memphis Collegiate Schools</option>
+            <option value="kippnashville.illuminatehc.com">KIPP Nashville</option>
+            <option value="kippneworleans.illuminatehc.com">KIPP New Orleans</option>
+            <option value="kippnyc.illuminatehc.com">KIPP New York City</option>
+            <option value="kippphiladelphia.illuminatehc.com">KIPP Philadelphia Schools</option>
+            <option value="kippreach.illuminatehc.com">KIPP Reach (Oklahoma)</option>
+            <option value="kippsa.illuminatehc.com">KIPP San Antonio</option>
+            <option value="kippstlouis.illuminatehc.com">KIPP St. Louis</option>
+            <option value="kippstand.illuminatehc.com">KIPP Stand (MN)</option>
+            <option value="kippteamschools.illuminatehc.com">KIPP TEAM (New Jersey)</option>
+            <option value="kipptulsa.illuminatehc.com">KIPP Tulsa</option>
+            <option value="komarek94.illuminatehc.com">Komarek School District 94</option>
+            <option value="oakland.illuminatehc.com">Korematsu Discovery Academy</option>
+            <option value="kyrene.illuminatehc.com">Kyrene School District</option>
+            <option value="lcusd.illuminatehc.com">La Canada Unified School District</option>
+            <option value="lmsvsd.illuminatehc.com">La Mesa Spring Valley School Disrict</option>
+            <option value="lakeschool.illuminatehc.com">Lake Elementary School District- CANCELED</option>
+            <option value="lfschools.illuminatehc.com">Lake Forest Community High School District 115</option>
+            <option value="luesd.illuminatehc.com">Lakeside Union Elementary School District</option>
+            <option value="lsusd.illuminatehc.com">Lakeside Union School District</option>
+            <option value="lammersville.illuminatehc.com">Lammersville School District</option>
+            <option value="lancaster.illuminatehc.com">Lancaster Elementary School District</option>
+            <option value="lasac.illuminatehc.com">Language Academy of Sacramento</option>
+            <option value="llesd.illuminatehc.com">Las Lomitas Elementary School District</option>
+            <option value="lappartnerschools.illuminatehc.com">LAs Promise</option>
+            <option value="garfieldhs.illuminatehc.com">LAUSD - James A. Garfield High School</option>
+            <option value="polyhigh.illuminatehc.com">LAUSD - John H. Francis Polytechnic High School</option>
+            <option value="lappartnerschools.illuminatehc.com">LAUSD - John Muir Middle School</option>
+            <option value="micase.illuminatehc.com">Lawton Community Schools</option>
+            <option value="laytonville.illuminatehc.com">Laytonville Unified School District- Canceled</option>
+            <option value="leadpublicschools.illuminatehc.com">Lead Public Schools</option>
+            <option value="leadps.illuminatehc.com">Leadership Public Schools</option>
+            <option value="lssd.illuminatehc.com">Lebanon Special School District</option>
+            <option value="lgsd.illuminatehc.com">Lemon Grove School District</option>
+            <option value="luhsd.illuminatehc.com">Lemoore Union High School District</option>
+            <option value="lisd.illuminatehc.com">Lenawee Intermediate School District</option>
+            <option value="lcisd.illuminatehc.com">Lewis Cass Intermediate School District</option>
+            <option value="libertas.illuminatehc.com">Libertas College Preparatory Charter School</option>
+            <option value="libertyuhsd.illuminatehc.com">Liberty Union High School District</option>
+            <option value="lighthousear.illuminatehc.com">Lighthouse Academies- CANCELED</option>
+            <option value="lighthouse.illuminatehc.com">Lighthouse Charter School-Tulsa</option>
+            <option value="littlelake.illuminatehc.com">Little Lake City Elementary School District</option>
+            <option value="losd.illuminatehc.com">Live Oak School District</option>
+            <option value="lousd.illuminatehc.com">Live Oak Unified School District</option>
+            <option value="lodi.illuminatehc.com">Lodi Unified School District</option>
+            <option value="lompoc.illuminatehc.com">Lompoc Unified School District- Canceled</option>
+            <option value="lbusd.illuminatehc.com">Long Beach Unified School District- Canceled</option>
+            <option value="losal.illuminatehc.com">Los Alamitos Unified School District</option>
+            <option value="laaae.illuminatehc.com">Los Angeles Academy of Arts and Enterprise</option>
+            <option value="lacoe.illuminatehc.com">Los Angeles County Office Of Education</option>
+            <option value="lacorps.illuminatehc.com">Los Angeles Education Corp</option>
+            <option value="laleadership.illuminatehc.com">Los Angeles Leadership Academy</option>
+            <option value="lnsd.illuminatehc.com">Los Nietos School District</option>
+            <option value="ljsd.illuminatehc.com">Lowell Joint School District</option>
+            <option value="lvsd.illuminatehc.com">Lucerne Valley Unified School District</option>
+            <option value="maderausd.illuminatehc.com">Madera Unified School District</option>
+            <option value="manhattancharters.illuminatehc.com">Manhattan Charter School</option>
+            <option value="k12eta.illuminatehc.com">Manistee Catholic Central</option>
+            <option value="k12eta.illuminatehc.com">Manistee Intermediate School District</option>
+            <option value="mvs.illuminatehc.com">Maple Valley Public Schools</option>
+            <option value="miusd.illuminatehc.com">Marcum-Illinois Union Elementary School District</option>
+            <option value="mjusd.illuminatehc.com">Marysville Joint Unified School District</option>
+            <option value="masonohioschools.illuminatehc.com">Mason City Schools- CANCELED</option>
+            <option value="matcheducation.illuminatehc.com">Match Charter Public Schools</option>
+            <option value="touchstone.illuminatehc.com">Matchbook Learning (formally Touchstone Education, Inc.)</option>
+            <option value="mcoe.illuminatehc.com">Mendocino County Office of Education</option>
+            <option value="mendotausd.illuminatehc.com">Mendota Unified School District</option>
+            <option value="riversidecoe.illuminatehc.com">Menifee Union School District</option>
+            <option value="mpcsd.illuminatehc.com">Menlo Park City Elementary Schools</option>
+            <option value="mcisd.illuminatehc.com">Menominee County Intermediate School District</option>
+            <option value="mcesa.illuminatehc.com">Midland Educational Service Agency (ESA)</option>
+            <option value="mcesa.illuminatehc.com">Midland Public Schools</option>
+            <option value="wisd.illuminatehc.com">Milan Area Schools</option>
+            <option value="milpitas.illuminatehc.com">Milpitas Unified School District</option>
+            <option value="monrovia.illuminatehc.com">Monrovia Unified School District</option>
+            <option value="mpusd.illuminatehc.com">Monterey Peninsula Unified School District</option>
+            <option value="mvusd.illuminatehc.com">Moreno Valley Unified School District</option>
+            <option value="musd.illuminatehc.com">Morongo Unified School District</option>
+            <option value="mlusd.illuminatehc.com">Mother Lode Union School District</option>
+            <option value="mountainvalley.illuminatehc.com">Mountain Valley Unified School District</option>
+            <option value="mtnview.illuminatehc.com">Mountain View School District (Ontario)</option>
+            <option value="movingeverest.illuminatehc.com">Moving Everest Charter School</option>
+            <option value="navigatorschools.illuminatehc.com">Navigator Schools</option>
+            <option value="neaclc.illuminatehc.com">Nea Community Learning Center</option>
+            <option value="nhusd.illuminatehc.com">New Haven Unified School District</option>
+            <option value="newheightscharter.illuminatehc.com">New Heights Charter</option>
+            <option value="newhopecharter.illuminatehc.com">New Hope Academy</option>
+            <option value="nhcharteracademy.illuminatehc.com">New Horizon Charter Academy</option>
+            <option value="newlosangeles.illuminatehc.com">New Los Angeles Charter School</option>
+            <option value="newspirit.illuminatehc.com">New Spirit Charter</option>
+            <option value="newarklegacy.illuminatehc.com">Newark Legacy Charter School</option>
+            <option value="ncresa.illuminatehc.com">Newaygo County RESA</option>
+            <option value="nmusd.illuminatehc.com">Newport-Mesa Unified School District</option>
+            <option value="newton.illuminatehc.com">Newton County School System</option>
+            <option value="nmcusd.illuminatehc.com">North Monterey County Unified School District</option>
+            <option value="nohum.illuminatehc.com">Northern Humboldt Union High School DIstrict</option>
+            <option value="nuestro.illuminatehc.com">Nuestro Elementary School District</option>
+            <option value="nuview.illuminatehc.com">Nuview Union School District</option>
+            <option value="oakvalleyschool.illuminatehc.com">Oak Valley Union Elementary School District</option>
+            <option value="oakland.illuminatehc.com">Oakland Schools Fondatio- under OAKLAND USD</option>
+            <option value="oakland.illuminatehc.com">Oakland Unified School District</option>
+            <option value="unityhigh.illuminatehc.com">Oakland Unity High School</option>
+            <option value="ouesd.illuminatehc.com">Oakley Union Elementary School District</option>
+            <option value="ovsd.illuminatehc.com">Ocean View School District</option>
+            <option value="ofarrellschool.illuminatehc.com">Ofarrell Charter School</option>
+            <option value="oldadobe.illuminatehc.com">Old Adobe Union School District</option>
+            <option value="onepurposeschool.illuminatehc.com">One Purpose School</option>
+            <option value="omsd.illuminatehc.com">Ontario Montclair School District</option>
+            <option value="opportunitycharter.illuminatehc.com">Opportunity Charter School</option>
+            <option value="ocesd.illuminatehc.com">Orange Center School District</option>
+            <option value="orland.illuminatehc.com">Orland Joint Unified School District</option>
+            <option value="ourcommunityschool.illuminatehc.com">Our Community School</option>
+            <option value="oxfordschools.illuminatehc.com">Oxford Community Schools</option>
+            <option value="oxford.illuminatehc.com">Oxford Preparatory Academy</option>
+            <option value="pgusd.illuminatehc.com">Pacific Grove Unified School District</option>
+            <option value="pacificasd.illuminatehc.com">Pacifica School District</option>
+            <option value="pvusd.illuminatehc.com">Pajaro Valley Unified School District</option>
+            <option value="riversidecoe.illuminatehc.com">Palo Verde Unified School District</option>
+            <option value="paralosninos.illuminatehc.com">Para Los Ninos</option>
+            <option value="pusdk12.illuminatehc.com">Paradise Unified School District</option>
+            <option value="parlierunified.illuminatehc.com">Parlier Unified School District</option>
+            <option value="partnershipla.illuminatehc.com">Partnership for LA Schools - PLAS</option>
+            <option value="puc.illuminatehc.com">Partnerships to Uplift Communities PUC</option>
+            <option value="pasoschools.illuminatehc.com">Paso Robles Joint Unified School District</option>
+            <option value="pathwayscommunity.illuminatehc.com">Pathways Community School</option>
+            <option value="riversidecoe.illuminatehc.com">Perris Elementary School District</option>
+            <option value="phoenixunion.illuminatehc.com">Phoenix Union High School District</option>
+            <option value="pickerington.illuminatehc.com">Pickerington Local School District</option>
+            <option value="pierce.illuminatehc.com">Pierce Joint Unified School District</option>
+            <option value="pasd.illuminatehc.com">Pinconning Area Schools</option>
+            <option value="pineridge.illuminatehc.com">Pine Ridge Elementary School District</option>
+            <option value="pioneercharter.illuminatehc.com">Pioneer Charter</option>
+            <option value="puesd.illuminatehc.com">Pioneer Union Elementary School District</option>
+            <option value="pittsburg.illuminatehc.com">Pittsburg Unified School District</option>
+            <option value="pleasantgrove.illuminatehc.com">Pleasant Grove Joint Union School District</option>
+            <option value="plusd.illuminatehc.com">Plumas Lake Elementary School District</option>
+            <option value="pointarena.illuminatehc.com">Point Arena Joint Union High School District</option>
+            <option value="pvsd.illuminatehc.com">Portola Valley Elementary School District</option>
+            <option value="pottervalley.illuminatehc.com">Potter Valley Community Unified School district</option>
+            <option value="poway.illuminatehc.com">Poway Unified School District</option>
+            <option value="publicprep.illuminatehc.com">Public Prep Network</option>
+            <option value="queenbee.illuminatehc.com">Queen Bee District 16</option>
+            <option value="rainierprep.illuminatehc.com">Rainier Prep</option>
+            <option value="ramonausd.illuminatehc.com">Ramona Unified School District</option>
+            <option value="rsf.illuminatehc.com">Rancho Santa Fe School District</option>
+            <option value="rcsd.illuminatehc.com">Ravenswood City School District</option>
+            <option value="reachleadershipacademy.illuminatehc.com">Reach Leadership Academy</option>
+            <option value="realjourney.illuminatehc.com">Real Journey Academies (New Vision)</option>
+            <option value="realmcharterschool.illuminatehc.com">Realm Charter School</option>
+            <option value="rbuesd.illuminatehc.com">Red Bluff Union Elementary School District</option>
+            <option value="redlands.illuminatehc.com">Redlands Unified School District</option>
+            <option value="rbusd.illuminatehc.com">Redondo Beach Unified School District</option>
+            <option value="regeneration.illuminatehc.com">Regeneration Schools</option>
+            <option value="oapcs.illuminatehc.com">Renaissance Academy Multimedia Arts</option>
+            <option value="rialto.illuminatehc.com">Rialto Unified School District</option>
+            <option value="magonacademy.illuminatehc.com">Ricardo Flores Magon Academy</option>
+            <option value="richfieldpsa.illuminatehc.com">Richfield Public School Academy</option>
+            <option value="richland.illuminatehc.com">Richland Union Elementary School District</option>
+            <option value="rcp.illuminatehc.com">Richmond College Prep</option>
+            <option value="rimsd.illuminatehc.com">Rim of the World Unified School District</option>
+            <option value="rvusd.illuminatehc.com">Rincon Valley Union School District</option>
+            <option value="rbgusd.illuminatehc.com">Rio Bravo-Greeley Union School District</option>
+            <option value="riverislandsacademy.illuminatehc.com">River Islands Technology Academy</option>
+            <option value="rjusd.illuminatehc.com">Riverdale Joint Union School District DnA</option>
+            <option value="riversidecoe.illuminatehc.com">Riverside County Office of the Superintindent</option>
+            <option value="rusd.illuminatehc.com">Riverside Unified School District</option>
+            <option value="robla.illuminatehc.com">Robla School District</option>
+            <option value="rocketship.illuminatehc.com">Rocketship Education</option>
+            <option value="rocklinacademy.illuminatehc.com">Rocklin Academy</option>
+            <option value="rockymountprep.illuminatehc.com">Rocky Mount Prep North Carolina- CANCELED</option>
+            <option value="rockymountainprep.illuminatehc.com">Rocky Mountain Prep</option>
+            <option value="riversidecoe.illuminatehc.com">Romoland School District</option>
+            <option value="ruesd.illuminatehc.com">Rosedale Union Elementary School District</option>
+            <option value="rjuhsd.illuminatehc.com">Roseville Joint Union High School District</option>
+            <option value="roundvalley.illuminatehc.com">Round Valley Unified School District</option>
+            <option value="scusd.illuminatehc.com">Sacramento City Unified School District</option>
+            <option value="svusd.illuminatehc.com">Saddleback Valley USD</option>
+            <option value="shps.illuminatehc.com">Saint Hope Public Schools</option>
+            <option value="salinasuhsd.illuminatehc.com">Salinas Union High School District</option>
+            <option value="slcschools.illuminatehc.com">Salt Lake City School District</option>
+            <option value="sbcusd.illuminatehc.com">San Bernardino City Unified School District</option>
+            <option value="sancarlos.illuminatehc.com">San Carlos Elementary School District</option>
+            <option value="sdcoe.illuminatehc.com">San Diego COE</option>
+            <option value="sdusd.illuminatehc.com">San Diego Global Vision Academy- CANCELED</option>
+            <option value="sdusd.illuminatehc.com">San Diego Unified School District</option>
+            <option value="sduhsd.illuminatehc.com">San Dieguito UHSD</option>
+            <option value="sfusd.illuminatehc.com">San Francisco Unified School District</option>
+            <option value="sjcharter.illuminatehc.com">San Jose Charter Academy</option>
+            <option value="sanjose.illuminatehc.com">San Jose Unified School District DnA</option>
+            <option value="sanleandro.illuminatehc.com">San Leandro Unified School District</option>
+            <option value="slzusd.illuminatehc.com">San Lorenzo Unified School District</option>
+            <option value="slvusd.illuminatehc.com">San Lorenzo Valley Unified School District</option>
+            <option value="slcusd.illuminatehc.com">San Luis Coastal Unified School District</option>
+            <option value="sanmarcos.illuminatehc.com">San Marcos Unified School District</option>
+            <option value="sanpasqual.illuminatehc.com">San Pasqual Union Elementary School District</option>
+            <option value="spvusd.illuminatehc.com">San Pasqual Valley Unified School District</option>
+            <option value="sanger.illuminatehc.com">Sanger Unified School District</option>
+            <option value="sanilac.illuminatehc.com">Sanilac Intermediate School District</option>
+            <option value="sausd.illuminatehc.com">Santa Ana Unified School District</option>
+            <option value="sbunified.illuminatehc.com">Santa Barbara Unified School District</option>
+            <option value="sccs.illuminatehc.com">Santa Cruz City Schools</option>
+            <option value="fenton.illuminatehc.com">Santa Monica Boulevard Community Charter School</option>
+            <option value="smmusd.illuminatehc.com">Santa Monica-Malibu Unified School District</option>
+            <option value="sra.illuminatehc.com">Santa Rosa Charter Academy</option>
+            <option value="savsd.illuminatehc.com">Savanna Elementary School District</option>
+            <option value="micase.illuminatehc.com">Schoolcraft Community Schools</option>
+            <option value="selma.illuminatehc.com">Selma Unified School District</option>
+            <option value="ssd2.illuminatehc.com">Sheridan School District #2</option>
+            <option value="stcs.illuminatehc.com">Sherman Thomas Charter School</option>
+            <option value="isddata.illuminatehc.com">Shiawassee Regional ESD</option>
+            <option value="sierracharterschools.illuminatehc.com">Sierra Charter School</option>
+            <option value="ssusd.illuminatehc.com">Sierra Sands Unified School District</option>
+            <option value="sierrausd.illuminatehc.com">Sierra Unified School District</option>
+            <option value="svusdk12.illuminatehc.com">Silver Valley Unified School District</option>
+            <option value="simsfayola.illuminatehc.com">Sims Fayola International Academy</option>
+            <option value="sjusd.illuminatehc.com">Snowline Joint Unified School District</option>
+            <option value="soaracademies.illuminatehc.com">SOAR Academy</option>
+            <option value="soaracademy.illuminatehc.com">SOAR Academy (CA)</option>
+            <option value="soledad.illuminatehc.com">Soledad Unified School District</option>
+            <option value="scs.illuminatehc.com">Sonoma Charter School</option>
+            <option value="sonomavly.illuminatehc.com">Sonoma Valley Unified School District</option>
+            <option value="suesd.illuminatehc.com">Soquel Union Elementary School District</option>
+            <option value="southbayunion.illuminatehc.com">South Bay Union Elementary School District (Eureka)</option>
+            <option value="southbay.illuminatehc.com">South Bay Union School District</option>
+            <option value="micase.illuminatehc.com">South Haven Public Schools</option>
+            <option value="smcjuhsd.illuminatehc.com">South Monterey County Joint Union High School District</option>
+            <option value="spusd.illuminatehc.com">South Pasadena Unified School District</option>
+            <option value="sokern.illuminatehc.com">Southern Kern Unified School District</option>
+            <option value="spokaneia.illuminatehc.com">Spokane International Academy</option>
+            <option value="spreckels.illuminatehc.com">Spreckels Union Elementary School District</option>
+            <option value="springboro.illuminatehc.com">Springboro Community City Schools- CANCELED</option>
+            <option value="sccresa.illuminatehc.com">St. Clair RESA</option>
+            <option value="sjcschools.illuminatehc.com">St. Joseph County ISD</option>
+            <option value="standishsterling.illuminatehc.com">Standish-Sterling Schools</option>
+            <option value="schs.illuminatehc.com">Steele Canyon High School</option>
+            <option value="stockton.illuminatehc.com">Stockton Unified School District</option>
+            <option value="striveprep.illuminatehc.com">Strive Preparatory Schools</option>
+            <option value="sssd.illuminatehc.com">Sulphur Springs School District</option>
+            <option value="summitps.illuminatehc.com">Summit Public Schools</option>
+            <option value="susd12.illuminatehc.com">Sunnyside Unified School District</option>
+            <option value="sweetwaterschools.illuminateeed.com">Sweetwater Union High School District</option>
+            <option value="syc427.illuminatehc.com">Sycamore CUSD 427</option>
+            <option value="synergy.illuminatehc.com">Synergy Academies</option>
+            <option value="teachps.illuminatehc.com">TEACH Academy of Technologies</option>
+            <option value="templetonusd.illuminatehc.com">Templeton Unified School District</option>
+            <option value="oapcs.illuminatehc.com">The Graham Expeditors Middle School</option>
+            <option value="lcer.illuminatehc.com">The Lewis Center for Educational Research</option>
+            <option value="thesae.illuminatehc.com">The School of Arts and Enterprise</option>
+            <option value="thompsonschools.illuminatehc.com">Thompson School District R-21</option>
+            <option value="thrive.illuminatehc.com">THRIVE Charter School</option>
+            <option value="tuscola.illuminatehc.comsandbox">Tuscola Intermediate School District</option>
+            <option value="tustin.illuminatehc.com">Tustin Unified School District</option>
+            <option value="twinhillsusd.illuminatehc.com">Twin Hills Union School District</option>
+            <option value="twinriverscharterschool.illuminatehc.com">Twin Rivers Charter School</option>
+            <option value="twinriversusd.illuminatehc.com">Twin Rivers Unified School District</option>
+            <option value="ukiah.illuminatehc.com">Ukiah Unified School District</option>
+            <option value="uncommonschoolsny.illuminatehc.com">Uncommon Schools New York</option>
+            <option value="unionsd.illuminatehc.com">Union School District</option>
+            <option value="uprepschool.illuminatehc.com">University Prep</option>
+            <option value="upaflorida.illuminatehc.com">University Preparatory Academy- FL</option>
+            <option value="upeducationnetwork.illuminatehc.com">UP Education Network</option>
+            <option value="upland.illuminatehc.com">Upland Unified School District</option>
+            <option value="ednovate.illuminatehc.com">USC Hybrid High School</option>
+            <option value="vasacademy.illuminatehc.com">Valley Arts & Science Academy</option>
+            <option value="valleyprep.illuminatehc.com">Valley Preparatory Academy Charter School</option>
+            <option value="valorcollegiate.illuminatehc.com">Valor Collegiate Academy</option>
+            <option value="ventura.illuminatehc.com">Ventura Unified School District</option>
+            <option value="vesd.illuminatehc.com">Victor Elementary School District</option>
+            <option value="villagecharter.illuminatehc.com">Village Charter Academy</option>
+            <option value="vincentacademy.illuminatehc.com">Vincent Academy Charter School</option>
+            <option value="vusd.illuminatehc.com">Visalia Unified School District</option>
+            <option value="vistadelmar.illuminatehc.com">Vista Del Mar Union School District</option>
+            <option value="vista.illuminatehc.com">Vista Unified School District</option>
+            <option value="waldenacademy.illuminatehc.com">Walden Academy, Inc.</option>
+            <option value="washingtoncolony.illuminatehc.com">Washington Colony Elementary School District</option>
+            <option value="wusd.illuminatehc.com">Washington Unified School District</option>
+            <option value="washington.illuminatehc.com">Washington Unified School District Fresno</option>
+            <option value="classa.illuminatehc.com">Wayne RESA</option>
+            <option value="weldre1.illuminatehc.com">Weld County School District RE-1</option>
+            <option value="wenatchee.illuminatehc.com">Wenatchee School District</option>
+            <option value="wccusd.illuminatehc.com">West Contra Costa Unified School District</option>
+            <option value="wcusd.illuminatehc.com">West Covina Unified School District</option>
+            <option value="k12eta.illuminatehc.com">West Shore Educational Service Agency</option>
+            <option value="westwarwickpublicschools.illuminatehc.com">West Warwick Public Schools</option>
+            <option value="westfield.illuminatehc.com">Westfield Public Schools</option>
+            <option value="westside.illuminatehc.com">Westside Union Elementary School District</option>
+            <option value="k12eta.illuminatehc.com">Wexford-Missaukee Intermediate School District</option>
+            <option value="wheatland.illuminatehc.com">Wheatland School District</option>
+            <option value="wchs.illuminatehc.com">Whittier Christian High School</option>
+            <option value="willits.illuminatehc.com">Willits Unified School District</option>
+            <option value="winters.illuminatehc.com">Winters Joint Unified School District</option>
+            <option value="wisdomacademy.illuminatehc.com">Wisdom Academy- CANCELED</option>
+            <option value="wishcharter.illuminatehc.com">Wish Charter</option>
+            <option value="woodlake.illuminatehc.com">Woodlake Unified School District</option>
+            <option value="wjusd.illuminatehc.com">Woodland Joint Unified School District</option>
+            <option value="wsd.illuminatehc.com">Wright Elementary School District</option>
+            <option value="yolocoe.illuminatehc.com">Yolo County Office of Education</option>
+            <option value="ypics.illuminatehc.com">Youth Policy Institute Charter Schools (YPICS)</option>
+            <option value="ypiusa.illuminatehc.com">Youth Policy Institute YPI</option>
+            <option value="ycusd.illuminatehc.com">Yuba City Unified School District</option>
+            <option value="yumasd.illuminatehc.com">Yuma School District No.1</option>
+            <option value="yumaunion.illuminatehc.com">Yuma Union High School District No.70</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+    -->
+
+        <!-- Javascript -->
+        <script src="assets/js/jquery-1.11.1.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/js/jquery.backstretch.min.js"></script>
+        <script src="assets/js/scripts.js"></script>
+        
+        <!--[if lt IE 10]>
+            <script src="assets/js/placeholder.js"></script>
+        <![endif]-->
+
+    </body>
+
+</html>
